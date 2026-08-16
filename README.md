@@ -8,7 +8,7 @@ Scan the QR code below to run the app directly on your mobile device:
 
 ### Downloads
 * **Windows:** [Static EXE (.zip)](https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/releases/download/v1.0.0/ybot-capsule-box3d-sdl3-exe.zip) | [VirusTotal Report](https://www.virustotal.com/gui/file/f62c60a1d3ad548be365e4ddd58fc587defdfae5a68307c6792e1e5596d1f950)
-* **Android:** [APK (.zip)](https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/releases/download/v1.0.0/ybot-capsule-box3d-sdl3-apk.zip)
+* **Android:** [APK (.zip)](https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/releases/download/v1.0.0/ybot-capsule-box3d-sdl3.apk)
 * **WebAssembly:** [Wasm Build (.zip)](https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/releases/download/v1.0.0/ybot-capsule-box3d-sdl3-wasm.zip)
 
 ### Preview
