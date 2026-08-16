@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+                   user-scalable=no, viewport-fit=cover">
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
+            background-color: #222;
+        }
+
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            outline: none;
+        }
+
+        .repo-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body style="caret-color: transparent;">
+    <canvas id="canvas"></canvas>
+
+    <p class="repo-link">
+        <a href="https://github.com/ivan-enzhaev/blending-ozz-animation-opengl-sdl3-cpp"
+           target="_blank" rel="noopener noreferrer"
+           style="color: white;">GitHub repository</a>
+    </p>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+
+        // Emscripten canvas binding
+        window.Module = window.Module || {};
+        window.Module.canvas = canvas;
+        window.Module.disableCanvasResizing = true;
+
+        canvas.oncontextmenu = event => {
+            event.preventDefault();
+            return false;
+        };
+
+        // Resize guards
+        let resizePending = false;
+        let lastPixelWidth = 0;
+        let lastPixelHeight = 0;
+
+        function pauseResizeEvents() {
+            window.removeEventListener('resize', safeUpdateCanvasSize);
+            window.removeEventListener('orientationchange', safeUpdateCanvasSize);
+        }
+
+        function resumeResizeEvents() {
+            window.addEventListener('resize', safeUpdateCanvasSize);
+            window.addEventListener('orientationchange', safeUpdateCanvasSize);
+        }
+
+        function safeUpdateCanvasSize() {
+            if (resizePending) return;
+            resizePending = true;
+
+            requestAnimationFrame(() => {
+                resizePending = false;
+
+                pauseResizeEvents(); // 🔥 prevents recursion
+
+                const dpr = window.devicePixelRatio || 1;
+                const pixelWidth = Math.max(1, Math.floor(window.innerWidth * dpr));
+                const pixelHeight = Math.max(1, Math.floor(window.innerHeight * dpr));
+
+                if (pixelWidth !== lastPixelWidth || pixelHeight !== lastPixelHeight) {
+                    lastPixelWidth = pixelWidth;
+                    lastPixelHeight = pixelHeight;
+
+                    if (Module && typeof Module.setCanvasSize === 'function') {
+                        Module.setCanvasSize(pixelWidth, pixelHeight);
+                    } else {
+                        canvas.width = pixelWidth;
+                        canvas.height = pixelHeight;
+                    }
+                }
+
+                resumeResizeEvents(); // 🔥 re-enable after resize
+            });
+        }
+
+        // Initial resize
+        window.Module.onRuntimeInitialized = () => safeUpdateCanvasSize();
+        safeUpdateCanvasSize();
+        resumeResizeEvents();
+
+        // Overlay
+        const startOverlay = document.createElement("div");
+        startOverlay.innerText = "Tap Anywhere to Start";
+        startOverlay.style.cssText =
+            "position:fixed;top:0;left:0;width:100%;height:100%;background:#000;" +
+            "color:#fff;display:flex;justify-content:center;align-items:center;" +
+            "z-index:9999;font-size:24px;cursor:pointer;";
+        document.body.appendChild(startOverlay);
+
+        startOverlay.addEventListener("click", async () => {
+            const docEl = document.documentElement;
+            try {
+                if (docEl.requestFullscreen) await docEl.requestFullscreen();
+                else if (docEl.webkitRequestFullscreen) await docEl.webkitRequestFullscreen();
+            } catch (e) {
+                console.log("Fullscreen request deferred or denied");
+            }
+
+            safeUpdateCanvasSize();
+            startOverlay.style.display = "none";
+        });
+
+        function handleFullscreenChange() {
+            const isFullscreen =
+                !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+            startOverlay.style.display = isFullscreen ? "none" : "flex";
+            safeUpdateCanvasSize();
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    </script>
+
+<script async src="./js/app.js"></script>
+</body>
+</html>
