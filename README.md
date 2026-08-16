@@ -12,7 +12,7 @@ Scan the QR code below to run the app directly on your mobile device:
 * **WebAssembly:** [Wasm Build (.zip)](https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/releases/download/v1.0.0/ybot-capsule-box3d-sdl3-wasm.zip)
 
 ### Preview
-Android demo recorded using [scrcpy](https://github.com/Genymobile/scrcpy) and Camtasia Recorder:
+Android demo recorded using [scrcpy](https://github.com/Genymobile/scrcpy) and [Camtasia](https://www.techsmith.com/camtasia.html):
 
 <p align="center">
     <img src="https://github.com/ivan-enzhaev/ybot-capsule-box3d-sdl3/assets/3908473/e751a9b5-43b2-462c-9bb2-4de36bca1888" alt="Android Demo Preview">
